@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Memory Game</string>
+    <string name="play">Play</string>
+    <string name="help">Help</string>
+    <string name="instructions">Choose Two cards to flip over, if the images are the same you get a point, if not the images flip back over.
+    You must correctly choose the correct images within a certain amount of turns</string>
+</resources>
