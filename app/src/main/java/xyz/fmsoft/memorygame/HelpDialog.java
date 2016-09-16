@@ -1,17 +1,21 @@
 package xyz.fmsoft.memorygame;
 
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * Created by fredericmurry on 9/15/16.
  */
-public class HelpDialog extends DialogFragment {
+public class HelpDialog extends DialogFragment implements View.OnClickListener {
 
+    private TextView ok;
 
     static HelpDialog newInstance(){
         HelpDialog hd = new HelpDialog();
@@ -22,6 +26,7 @@ public class HelpDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NORMAL, getTheme());
 
     }
 
@@ -47,11 +52,19 @@ public class HelpDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.help_dialog,container,false);
-
-
-
-
+        ok = (Button) v.findViewById(R.id.help_ok);
+        ok.setOnClickListener(this);
         return v;
 
+    }
+
+    /**
+     * Called when a view has been clicked.
+     *
+     * @param v The view that was clicked.
+     */
+    @Override
+    public void onClick(View v) {
+        this.dismiss();
     }
 }

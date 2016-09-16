@@ -3,12 +3,28 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
+        android:id="@+id/instructions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/instructions"
         android:textSize="18sp"
         android:textColor="@color/colorPrimary"
         android:layout_gravity="center"
-        android:layout_margin="48dp"/>
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginRight="48dp"
+        android:layout_marginBottom="4dp"/>
+    <Button
+        android:id="@+id/help_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/MyMaterialDialogButton"
+        android:textColor="@color/colorAccent"
+        android:text="OK"
+        android:textSize="18sp"
+        android:layout_below="@id/instructions"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="8dp"/>
 
 </RelativeLayout>

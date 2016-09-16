@@ -14,4 +14,10 @@
         
     </style>
 
+    <style name="MyMaterialDialogButton" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">@color/colorPrimary</item>
+        <item name="colorButtonNormal">@color/colorText</item>
+
+    </style>
+
 </resources>
