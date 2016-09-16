@@ -18,6 +18,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private TextView timerDisplay;
     private int pointCounter;
     private CountDownTimer timer;
+    private GridView gridView;
+    public long totalTime = 31000;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,21 +36,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         info.setOnClickListener(this);
         timerDisplay = (TextView)findViewById(R.id.game_counter);
         points.setText("Points: "+pointCounter);
-        timer = new CountDownTimer(30000,1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                timerDisplay.setText("Seconds remaining: "+millisUntilFinished/1000+"s");
-            }
+        setTimer();
 
-            @Override
-            public void onFinish() {
-                timerDisplay.setText("Seconds remaining: 0");
-                Toast.makeText(GameActivity.this, "Game Over", Toast.LENGTH_SHORT).show();
-            }
-        };
-        timer.start();
+
         //TODO: Gather 10 android icons and place them in GridLayout Randomly
         //TODO: Create flipping card Animation
+        gridView = (GridView)findViewById(R.id.game_layout);
+        gridView.setAdapter(new ImageAdapter(this));
+
     }
 
     /**
@@ -62,7 +58,29 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 DialogFragment helpDialog = HelpDialog.newInstance();
                 helpDialog.show(fragmentTransaction,"Help");
+                timer.cancel();
+                timerDisplay.setText("Paused");
+
+
                 break;
         }
+    }
+
+    public void setTimer(){
+        timer = new CountDownTimer(totalTime,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timerDisplay.setText("Seconds remaining: "+millisUntilFinished/1000+"s");
+                totalTime = millisUntilFinished;
+            }
+
+            @Override
+            public void onFinish() {
+                timerDisplay.setText("Seconds remaining: 0");
+                Toast.makeText(GameActivity.this, "Game Over", Toast.LENGTH_SHORT).show();
+            }
+
+
+        }.start();
     }
 }

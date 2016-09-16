@@ -2,6 +2,7 @@ package xyz.fmsoft.memorygame;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ public class HelpDialog extends DialogFragment implements View.OnClickListener {
 
         return hd;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,20 @@ public class HelpDialog extends DialogFragment implements View.OnClickListener {
     }
 
     /**
+     * Customized onDismiss method to pause timer and start it back up without resetting the time
+     * @param dialog
+     */
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        //If GameActivity is the owner of HelpDialog set the timer on dismissal
+        if(getActivity() instanceof GameActivity) {
+            ((GameActivity) getActivity()).setTimer();
+        }
+        super.onDismiss(dialog);
+
+    }
+
+    /**
      * Called when a view has been clicked.
      *
      * @param v The view that was clicked.
@@ -68,3 +84,5 @@ public class HelpDialog extends DialogFragment implements View.OnClickListener {
         this.dismiss();
     }
 }
+
+
