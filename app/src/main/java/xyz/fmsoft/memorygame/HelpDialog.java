@@ -68,7 +68,9 @@ public class HelpDialog extends DialogFragment implements View.OnClickListener {
     public void onDismiss(DialogInterface dialog) {
         //If GameActivity is the owner of HelpDialog set the timer on dismissal
         if(getActivity() instanceof GameActivity) {
-            ((GameActivity) getActivity()).setTimer();
+            if(!(((GameActivity) getActivity()).playerWon())) {
+                ((GameActivity) getActivity()).setTimer();
+            }
         }
         super.onDismiss(dialog);
 

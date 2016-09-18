@@ -30,6 +30,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private CountDownTimer timer;
     private GridView gridView;
     public long totalTime = 180000;
+    private boolean won;
     ArrayList<ImageView> activeCards;
     Integer[] gameArray;
 
@@ -38,6 +39,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        won = false;
         activeCards = new ArrayList<>();
         setContentView(R.layout.activity_game);
         if(getSupportActionBar()!=null){
@@ -82,7 +84,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             DialogFragment helpDialog = HelpDialog.newInstance();
             helpDialog.show(fragmentTransaction, "Help");
             timer.cancel();
-            timerDisplay.setText("Paused");
+            if(!won) {
+                timerDisplay.setText("Paused");
+            }
         }
 
     }
@@ -133,15 +137,22 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         activeCards.clear();
 
+                        //Winning Case
+                        if(pointCounter >= 10){
+                            won = true;
+                            timer.cancel();
+                            timerDisplay.setText("You Win!!!");
+                        }
+
                     }
                     gridView.setEnabled(true);
 
                 }
-            }, 1500);
-
+            }, 500);
         }
-
     }
 
-
+    public boolean playerWon(){
+        return won;
+    }
 }
