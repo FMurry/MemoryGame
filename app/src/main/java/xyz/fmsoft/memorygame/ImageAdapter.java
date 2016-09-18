@@ -9,6 +9,10 @@ import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by fredericmurry on 9/15/16.
@@ -16,13 +20,35 @@ import android.widget.ImageView;
 public class ImageAdapter extends BaseAdapter {
 
     private Context context;
+    int count = 0;
     private Integer[] androidPhotos = {
-            android.R.drawable.sym_def_app_icon
+            R.drawable.android,
+            R.drawable.androideclair,
+            R.drawable.androidfroyo,
+            R.drawable.androidgingerbread,
+            R.drawable.androidicecream,
+            R.drawable.androidjellybean,
+            R.drawable.androidkitkat,
+            R.drawable.androidlollipop,
+            R.drawable.androidmarshmallow,
+            R.drawable.androidnougat,
+            R.drawable.android,
+            R.drawable.androideclair,
+            R.drawable.androidfroyo,
+            R.drawable.androidgingerbread,
+            R.drawable.androidicecream,
+            R.drawable.androidjellybean,
+            R.drawable.androidkitkat,
+            R.drawable.androidlollipop,
+            R.drawable.androidmarshmallow,
+            R.drawable.androidnougat
        //TODO: Place R.drawable android pictures
     };
 
+
     public ImageAdapter(Context context){
        this.context = context;
+        shuffleArray();
     }
     /**
      * How many items are in the data set represented by this Adapter.
@@ -76,8 +102,8 @@ public class ImageAdapter extends BaseAdapter {
      * @return A View corresponding to the data at the specified position.
      */
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView card;
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        final ImageView card;
         if(convertView == null){
             card = new ImageView(context);
             card.setLayoutParams(new GridView.LayoutParams(85,85));
@@ -88,7 +114,30 @@ public class ImageAdapter extends BaseAdapter {
             card = (ImageView)convertView;
         }
 
-        card.setImageResource(androidPhotos[position]);
+        card.setImageResource(R.drawable.placeholder);
+        card.setTag(R.drawable.placeholder);
+        ViewGroup.LayoutParams imagelayout = (ViewGroup.LayoutParams)card.getLayoutParams();
+        imagelayout.width = 200;
+        imagelayout.height = 200;
+        card.setLayoutParams(imagelayout);
         return card;
     }
+
+    public void shuffleArray(){
+        Random random = new Random();
+        for (int i = androidPhotos.length - 1; i > 0; i--)
+        {
+            int index = random.nextInt(i + 1);
+            // Simple swap
+            int a = androidPhotos[index];
+            androidPhotos[index] = androidPhotos[i];
+            androidPhotos[i] = a;
+        }
+    }
+
+    public Integer[] getArray(){
+        return androidPhotos;
+    }
+
+
 }
