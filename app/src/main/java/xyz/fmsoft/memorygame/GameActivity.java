@@ -29,7 +29,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private int pointCounter;
     private CountDownTimer timer;
     private GridView gridView;
-    public long totalTime = 180000;
+    public long totalTime = 181000;
     private boolean won;
     ArrayList<ImageView> activeCards;
     Integer[] gameArray;
@@ -110,7 +110,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void checkGame(View card, int position) {
-        if((int)(((ImageView)card).getTag()) != R.drawable.checkmark) {
+
+        if((int)(((ImageView)card).getTag()) != R.drawable.checkmark && activeCards.size() < 1) {
+            activeCards.add((ImageView) card);
+            ((ImageView) card).setImageResource(gameArray[position]);
+            ((ImageView) card).setTag(gameArray[position]);
+        }
+        //So user doesn't press same image twice
+        else if((int)(((ImageView)card).getTag()) != R.drawable.checkmark && !((ImageView)card).equals(activeCards.get(0))){
             activeCards.add((ImageView) card);
             ((ImageView) card).setImageResource(gameArray[position]);
             ((ImageView) card).setTag(gameArray[position]);

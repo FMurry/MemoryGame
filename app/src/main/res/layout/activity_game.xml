@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:textColor="@color/colorPrimary"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"/>
     <GridView
         android:id="@+id/game_layout"
         android:layout_width="wrap_content"
@@ -34,7 +35,7 @@
         android:textColor="@color/colorPrimary"
         android:textSize="24sp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/game_layout"/>
+        android:layout_alignParentBottom="true"/>
     <TextView
         android:id="@+id/info_button"
         android:layout_width="wrap_content"
