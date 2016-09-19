@@ -23,6 +23,8 @@ Main Menu with Resume State:
 All cards:
 <br>
 ![Alt text](https://github.com/SJSU-CS175-Fall2016/memory-game-FMurry/blob/master/screenshots/allcards.png "All Cards")
+<br>
+Maintained by Frederic Murry
 
 
 
