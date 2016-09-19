@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button playButton;
     private Button helpButton;
     private Button restartButton;
+    private Bundle keys;
 
 
     @Override
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(getSupportActionBar()!=null){
             getSupportActionBar().hide();
         }
-        Bundle keys = getIntent().getExtras();
+        keys = getIntent().getExtras();
         if(keys != null) {
             if (!(keys.getString("state").equals(null))) {
                 playButton.setText("Resume");
@@ -46,6 +47,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * Dispatch onResume() to fragments.  Note that for better inter-operation
+     * with older versions of the platform, at the point of this call the
+     * fragments attached to the activity are <em>not</em> resumed.  This means
+     * that in some cases the previous state may still be saved, not allowing
+     * fragment transactions that modify the state.  To correctly interact
+     * with fragments in their proper state, you should instead override
+     * {@link #onResumeFragments()}.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        keys = getIntent().getExtras();
+    }
 
     /**
      * Called when a view has been clicked.
