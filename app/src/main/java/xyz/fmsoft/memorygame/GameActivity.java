@@ -2,6 +2,7 @@ package xyz.fmsoft.memorygame;
 
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.media.Image;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -73,6 +74,20 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
+     * Dispatch onResume() to fragments.  Note that for better inter-operation
+     * with older versions of the platform, at the point of this call the
+     * fragments attached to the activity are <em>not</em> resumed.  This means
+     * that in some cases the previous state may still be saved, not allowing
+     * fragment transactions that modify the state.  To correctly interact
+     * with fragments in their proper state, you should instead override
+     * {@link #onResumeFragments()}.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    /**
      * Called when a view has been clicked.
      *
      * @param v The view that was clicked.
@@ -89,6 +104,20 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
+    }
+
+    /**
+     * Take care of popping the fragment back stack or finishing the activity
+     * as appropriate.
+     */
+    @Override
+    public void onBackPressed() {
+        Intent mainMenu = new Intent(this, MainActivity.class);
+        onPause();
+         mainMenu.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        mainMenu.putExtra("state","true");
+        timer.cancel();
+        startActivity(mainMenu);
     }
 
     public void setTimer(){
