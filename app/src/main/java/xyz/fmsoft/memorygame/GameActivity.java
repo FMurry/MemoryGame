@@ -102,7 +102,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onFinish() {
                 timerDisplay.setText("Seconds remaining: 0");
-                Toast.makeText(GameActivity.this, "Game Over", Toast.LENGTH_SHORT).show();
             }
 
 
