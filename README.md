@@ -2,13 +2,13 @@ Created by Frederic Murry
 
 This is the memory game project from CS175
 
-Play the game by matching two pictures
-Pressing the back button saves game state and allows you to resume or restart the game
-Has a count down timer but currently it has no affect when playing game.
-Game only works in Portrait mode
-Tested on API 19 up to 24 (android 4.4(kit-kat)-7.0(Nougat)) on Screen sizes 5-6.5.
-Completion Time: 3.5 hours
-
+Play the game by matching two pictures<br>
+Pressing the back button saves game state and allows you to resume or restart the game<br>
+Has a count down timer but currently it has no affect when playing game.<br>
+Game only works in Portrait mode.<br>
+Tested on API 19 up to 24 (android 4.4(kit-kat)-7.0(Nougat)) on Screen sizes 5-6.5 <br>
+Completion Time: 3.5 hours<br>
+<br>
 Main Menu:
 <br>
 ![Alt text](https://github.com/SJSU-CS175-Fall2016/memory-game-FMurry/blob/master/screenshots/mainmenu.png "Main Activity")
