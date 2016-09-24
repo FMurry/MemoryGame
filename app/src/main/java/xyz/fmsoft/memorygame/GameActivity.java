@@ -121,6 +121,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(mainMenu);
     }
 
+    /**
+     * Initializes the game timer
+     */
     public void setTimer(){
         timer = new CountDownTimer(totalTime,1000) {
             @Override
@@ -138,6 +141,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }.start();
     }
 
+    /**
+     * Method that handles the game logic. Checks if cards are similar, Handles card animation
+     * @param card the card that is being checked
+     * @param position the position of the card
+     */
     public void checkGame(View card, int position) {
 
         if((int)(((ImageView)card).getTag()) != R.drawable.checkmark && activeCards.size() < 1) {
@@ -188,7 +196,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * Returns whether the player won the match or nut
+     * @return the boolean stating whether player won or not
+     */
     public boolean playerWon(){
         return won;
+    }
+
+    /**
+     * Shuffles card game so that unsolved cards are below all of the solved cards
+     */
+    public void smartShuffle(){
+
     }
 }
