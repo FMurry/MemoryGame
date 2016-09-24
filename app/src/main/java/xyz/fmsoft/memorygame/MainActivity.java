@@ -14,12 +14,14 @@ import android.widget.GridView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-
-    private Button playButton;
-    private Button helpButton;
-    private Button restartButton;
+    @BindView(R.id.play_button)Button playButton;
+    @BindView(R.id.help_button)Button helpButton;
+    @BindView(R.id.restart_button)Button restartButton;
     private Bundle keys;
 
 
@@ -27,9 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        playButton = (Button)findViewById(R.id.play_button);
-        helpButton = (Button)findViewById(R.id.help_button);
-        restartButton = (Button)findViewById(R.id.restart_button);
+        ButterKnife.bind(this);
         restartButton.setVisibility(View.GONE);
         playButton.setOnClickListener(this);
         helpButton.setOnClickListener(this);

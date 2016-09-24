@@ -19,14 +19,17 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 //TODO: If user hits back button let them resume their current game
 //TODO: Listen for winner
 public class GameActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private GridView gameLayout;
-    private TextView points;
-    private TextView info;
-    private TextView timerDisplay;
+    @BindView(R.id.game_layout)GridView gameLayout;
+    @BindView(R.id.point_counter)TextView points;
+    @BindView(R.id.info_button)TextView info;
+    @BindView(R.id.game_counter)TextView timerDisplay;
     private int pointCounter;
     private CountDownTimer timer;
     private GridView gridView;
@@ -40,18 +43,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_game);
+        ButterKnife.bind(this);
         won = false;
         activeCards = new ArrayList<>();
-        setContentView(R.layout.activity_game);
         if(getSupportActionBar()!=null){
             getSupportActionBar().hide();
         }
         pointCounter = 0;
-        gameLayout = (GridView)findViewById(R.id.game_layout);
-        points = (TextView)findViewById(R.id.point_counter);
-        info = (TextView)findViewById(R.id.info_button);
         info.setOnClickListener(this);
-        timerDisplay = (TextView)findViewById(R.id.game_counter);
         points.setText("Points: "+pointCounter);
         setTimer();
 

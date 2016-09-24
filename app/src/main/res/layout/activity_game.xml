@@ -15,7 +15,8 @@
         android:textSize="18sp"
         android:textColor="@color/colorPrimary"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"/>
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="16dp"/>
     <GridView
         android:id="@+id/game_layout"
         android:layout_width="wrap_content"

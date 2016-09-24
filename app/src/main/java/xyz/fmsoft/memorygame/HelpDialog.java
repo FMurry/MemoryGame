@@ -11,12 +11,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by fredericmurry on 9/15/16.
  */
 public class HelpDialog extends DialogFragment implements View.OnClickListener {
 
-    private TextView ok;
+    @BindView(R.id.help_ok) Button ok;
+    @BindView(R.id.help_exit) TextView exit;
 
     static HelpDialog newInstance(){
         HelpDialog hd = new HelpDialog();
@@ -54,8 +58,9 @@ public class HelpDialog extends DialogFragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.help_dialog,container,false);
-        ok = (Button) v.findViewById(R.id.help_ok);
+        ButterKnife.bind(this,v);
         ok.setOnClickListener(this);
+        exit.setOnClickListener(this);
         return v;
 
     }
