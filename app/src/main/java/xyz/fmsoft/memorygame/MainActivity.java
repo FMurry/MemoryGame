@@ -16,8 +16,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.play_button)Button playButton;
     @BindView(R.id.help_button)Button helpButton;
@@ -31,9 +32,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         restartButton.setVisibility(View.GONE);
-        playButton.setOnClickListener(this);
-        helpButton.setOnClickListener(this);
-        restartButton.setOnClickListener(this);
         //Hiding actionbar gives cleaner look
         if(getSupportActionBar()!=null){
             getSupportActionBar().hide();
@@ -62,38 +60,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         keys = getIntent().getExtras();
     }
 
+    @OnClick(R.id.play_button)
+    public void play(){
+        ActivityManager manager = (ActivityManager)getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> list = manager.getRunningTasks(5);
+        Log.d("MAIN",""+list.size());
+        if(list.size()>=2){
+            Intent resumeGame = new Intent(this,GameActivity.class);
+            resumeGame.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(resumeGame);
+            finish();
+
+
+        }
+        else {
+            startActivity(new Intent(this, GameActivity.class));
+        }
+    }
+
+    @OnClick(R.id.help_button)
+    public void help(){
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        DialogFragment helpDialog = HelpDialog.newInstance();
+        helpDialog.show(fragmentTransaction,"Help");
+    }
+
+    @OnClick(R.id.restart_button)
+    public void restart(){
+        startActivity(new Intent(this,GameActivity.class));
+    }
     /**
      * Called when a view has been clicked.
      *
      * @param v The view that was clicked.
      */
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.play_button:
-                ActivityManager manager = (ActivityManager)getSystemService(ACTIVITY_SERVICE);
-                List<ActivityManager.RunningTaskInfo> list = manager.getRunningTasks(5);
-                Log.d("MAIN",""+list.size());
-                if(list.size()>=2){
-                    Intent resumeGame = new Intent(this,GameActivity.class);
-                    resumeGame.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                    startActivity(resumeGame);
-                    finish();
 
-
-                }
-                else {
-                    startActivity(new Intent(this, GameActivity.class));
-                }
-                break;
-            case R.id.help_button:
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                DialogFragment helpDialog = HelpDialog.newInstance();
-                helpDialog.show(fragmentTransaction,"Help");
-                break;
-            case R.id.restart_button:
-                startActivity(new Intent(this,GameActivity.class));
-                break;
-        }
-    }
 }

@@ -116,7 +116,7 @@ public class ImageAdapter extends BaseAdapter {
 
         card.setImageResource(R.drawable.placeholder);
         card.setTag(R.drawable.placeholder);
-        ViewGroup.LayoutParams imagelayout = (ViewGroup.LayoutParams)card.getLayoutParams();
+        ViewGroup.LayoutParams imagelayout = card.getLayoutParams();
         imagelayout.width = 200;
         imagelayout.height = 200;
         card.setLayoutParams(imagelayout);

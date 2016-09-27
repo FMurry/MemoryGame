@@ -21,18 +21,19 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnItemClick;
 
 //TODO: If user hits back button let them resume their current game
 //TODO: Listen for winner
-public class GameActivity extends AppCompatActivity implements View.OnClickListener{
+public class GameActivity extends AppCompatActivity{
 
-    @BindView(R.id.game_layout)GridView gameLayout;
+    @BindView(R.id.game_layout)GridView gridView;
     @BindView(R.id.point_counter)TextView points;
     @BindView(R.id.info_button)TextView info;
     @BindView(R.id.game_counter)TextView timerDisplay;
     private int pointCounter;
     private CountDownTimer timer;
-    private GridView gridView;
     public long totalTime = 181000;
     private boolean won;
     ArrayList<ImageView> activeCards;
@@ -44,35 +45,26 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        ImageAdapter adapter =new ImageAdapter(this);
+        gameArray = adapter.getArray();
         ButterKnife.bind(this);
+        gridView.setAdapter(adapter);
         won = false;
         activeCards = new ArrayList<>();
         if(getSupportActionBar()!=null){
             getSupportActionBar().hide();
         }
         pointCounter = 0;
-        info.setOnClickListener(this);
         points.setText("Points: "+pointCounter);
         setTimer();
 
 
-        //TODO: Gather 10 android icons and place them in GridLayout Randomly
-        //TODO: Create flipping card Animation
-        gridView = (GridView)findViewById(R.id.game_layout);
-        ImageAdapter adapter =new ImageAdapter(this);
-        gameArray = adapter.getArray();
-        gridView.setAdapter(adapter);
-        for(int i = 0; i < gameArray.length-1;i++){
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    checkGame(view, position);
-                }
-            });
-        }
-
     }
 
+    @OnItemClick(R.id.game_layout)
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+        checkGame(view, position);
+    }
     /**
      * Dispatch onResume() to fragments.  Note that for better inter-operation
      * with older versions of the platform, at the point of this call the
@@ -88,24 +80,17 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         setTimer();
     }
 
-    /**
-     * Called when a view has been clicked.
-     *
-     * @param v The view that was clicked.
-     */
-    @Override
-    public void onClick(View v) {
-        if(v.getId() == R.id.info_button) {
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            DialogFragment helpDialog = HelpDialog.newInstance();
-            helpDialog.show(fragmentTransaction, "Help");
-            timer.cancel();
-            if(!won) {
-                timerDisplay.setText("Paused");
-            }
+    @OnClick(R.id.info_button)
+    public void help(){
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        DialogFragment helpDialog = HelpDialog.newInstance();
+        helpDialog.show(fragmentTransaction, "Help");
+        timer.cancel();
+        if(!won) {
+            timerDisplay.setText("Paused");
         }
-
     }
+
 
     /**
      * Take care of popping the fragment back stack or finishing the activity
@@ -156,6 +141,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         //So user doesn't press same image twice
         else if((int)(((ImageView)card).getTag()) != R.drawable.checkmark && !((ImageView)card).equals(activeCards.get(0))){
             activeCards.add((ImageView) card);
+            //TODO: ADD animation here
             ((ImageView) card).setImageResource(gameArray[position]);
             ((ImageView) card).setTag(gameArray[position]);
         }
@@ -208,6 +194,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
      * Shuffles card game so that unsolved cards are below all of the solved cards
      */
     public void smartShuffle(){
-
+        //TODO: Lets put two tags in card: R.drawable.photo and state(Turned over or not)
     }
 }
