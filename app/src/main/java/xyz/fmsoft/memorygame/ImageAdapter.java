@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -21,34 +22,39 @@ public class ImageAdapter extends BaseAdapter {
 
     private Context context;
     int count = 0;
-    private Integer[] androidPhotos = {
-            R.drawable.android,
-            R.drawable.androideclair,
-            R.drawable.androidfroyo,
-            R.drawable.androidgingerbread,
-            R.drawable.androidicecream,
-            R.drawable.androidjellybean,
-            R.drawable.androidkitkat,
-            R.drawable.androidlollipop,
-            R.drawable.androidmarshmallow,
-            R.drawable.androidnougat,
-            R.drawable.android,
-            R.drawable.androideclair,
-            R.drawable.androidfroyo,
-            R.drawable.androidgingerbread,
-            R.drawable.androidicecream,
-            R.drawable.androidjellybean,
-            R.drawable.androidkitkat,
-            R.drawable.androidlollipop,
-            R.drawable.androidmarshmallow,
-            R.drawable.androidnougat
-       //TODO: Place R.drawable android pictures
-    };
+    boolean check = false;
+    private Integer[] androidPhotos;
 
+    private int sizeOfSolved;
 
-    public ImageAdapter(Context context){
+    public ImageAdapter(Context context, boolean shuffle){
        this.context = context;
-        shuffleArray();
+
+        if(check==false) {
+            androidPhotos = new Integer[]{R.drawable.android,
+                    R.drawable.androideclair,
+                    R.drawable.androidfroyo,
+                    R.drawable.androidgingerbread,
+                    R.drawable.androidicecream,
+                    R.drawable.androidjellybean,
+                    R.drawable.androidkitkat,
+                    R.drawable.androidlollipop,
+                    R.drawable.androidmarshmallow,
+                    R.drawable.androidnougat,
+                    R.drawable.android,
+                    R.drawable.androideclair,
+                    R.drawable.androidfroyo,
+                    R.drawable.androidgingerbread,
+                    R.drawable.androidicecream,
+                    R.drawable.androidjellybean,
+                    R.drawable.androidkitkat,
+                    R.drawable.androidlollipop,
+                    R.drawable.androidmarshmallow,
+                    R.drawable.androidnougat};
+        }
+        if(shuffle) {
+            shuffleArray();
+        }
     }
     /**
      * How many items are in the data set represented by this Adapter.
@@ -113,9 +119,20 @@ public class ImageAdapter extends BaseAdapter {
         else{
             card = (ImageView)convertView;
         }
-
-        card.setImageResource(R.drawable.placeholder);
-        card.setTag(R.drawable.placeholder);
+        if(check){
+            if(position < sizeOfSolved){
+                card.setImageResource(R.drawable.checkmark);
+                card.setTag(R.drawable.checkmark);
+            }
+            else{
+                card.setImageResource(R.drawable.placeholder);
+                card.setTag(R.drawable.placeholder);
+            }
+        }
+        else {
+            card.setImageResource(R.drawable.placeholder);
+            card.setTag(R.drawable.placeholder);
+        }
         ViewGroup.LayoutParams imagelayout = card.getLayoutParams();
         imagelayout.width = 200;
         imagelayout.height = 200;
@@ -137,6 +154,17 @@ public class ImageAdapter extends BaseAdapter {
 
     public Integer[] getArray(){
         return androidPhotos;
+    }
+
+    public void setArray(Integer[] newArray){ androidPhotos = newArray; }
+
+
+    public void updateAdapter(Integer[] newArray, int newSize){
+        androidPhotos = null;
+        androidPhotos = newArray;
+        check = true;
+        sizeOfSolved = newSize;
+        notifyDataSetChanged();
     }
 
 

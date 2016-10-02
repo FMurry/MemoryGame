@@ -13,12 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,13 +34,16 @@ public class GameActivity extends AppCompatActivity{
     @BindView(R.id.game_layout)GridView gridView;
     @BindView(R.id.point_counter)TextView points;
     @BindView(R.id.info_button)TextView info;
-    @BindView(R.id.game_counter)TextView timerDisplay;
+    @BindView(R.id.shuffle_button)Button shuffleButton;
     private int pointCounter;
     private CountDownTimer timer;
     public long totalTime = 181000;
     private boolean won;
     ArrayList<ImageView> activeCards;
     Integer[] gameArray;
+    ImageAdapter adapter;
+    int[] indexes;
+    ArrayList<Integer> checkMarkIndexes;
 
 
 
@@ -46,7 +51,7 @@ public class GameActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        ImageAdapter adapter =new ImageAdapter(this);
+        adapter =new ImageAdapter(this,true);
         gameArray = adapter.getArray();
         ButterKnife.bind(this);
         gridView.setAdapter(adapter);
@@ -57,7 +62,13 @@ public class GameActivity extends AppCompatActivity{
         }
         pointCounter = 0;
         points.setText("Points: "+pointCounter);
-        setTimer();
+        indexes = new int[2];
+        checkMarkIndexes = new ArrayList<>();
+        for(int i= 0; i< gridView.getAdapter().getCount();i++) {
+            gridView.getAdapter().getView(i,null,gridView).setTag(R.drawable.placeholder);
+            ((ImageView)gridView.getAdapter().getView(i,null,gridView)).setImageResource(R.drawable.placeholder);
+        }
+
 
 
     }
@@ -78,7 +89,6 @@ public class GameActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        setTimer();
     }
 
     @OnClick(R.id.info_button)
@@ -87,9 +97,7 @@ public class GameActivity extends AppCompatActivity{
         DialogFragment helpDialog = HelpDialog.newInstance();
         helpDialog.show(fragmentTransaction, "Help");
         timer.cancel();
-        if(!won) {
-            timerDisplay.setText("Paused");
-        }
+
     }
 
 
@@ -103,29 +111,10 @@ public class GameActivity extends AppCompatActivity{
         onPause();
          mainMenu.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         mainMenu.putExtra("state","true");
-        timer.cancel();
         startActivity(mainMenu);
     }
 
-    /**
-     * Initializes the game timer
-     */
-    public void setTimer(){
-        timer = new CountDownTimer(totalTime,1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                timerDisplay.setText("Seconds remaining: "+millisUntilFinished/1000+"s");
-                totalTime = millisUntilFinished;
-            }
 
-            @Override
-            public void onFinish() {
-                timerDisplay.setText("Seconds remaining: 0");
-            }
-
-
-        }.start();
-    }
 
     /**
      * Method that handles the game logic. Checks if cards are similar, Handles card animation
@@ -136,6 +125,7 @@ public class GameActivity extends AppCompatActivity{
 
         if((int)(((ImageView)card).getTag()) != R.drawable.checkmark && activeCards.size() < 1) {
             activeCards.add((ImageView) card);
+            indexes[0] = position;
             ObjectAnimator flip = ObjectAnimator.ofFloat(card,"rotationY",0f,180f);
             flip.setDuration(250);
             flip.start();
@@ -152,6 +142,7 @@ public class GameActivity extends AppCompatActivity{
         //So user doesn't press same image twice
         else if((int)(((ImageView)card).getTag()) != R.drawable.checkmark && !((ImageView)card).equals(activeCards.get(0))){
             activeCards.add((ImageView) card);
+            indexes[1] = position;
             ObjectAnimator flip = ObjectAnimator.ofFloat(card,"rotationY",0f,180f);
             flip.setDuration(250);
             flip.start();
@@ -175,26 +166,32 @@ public class GameActivity extends AppCompatActivity{
                             flip.setDuration(250);
                             flip.start();
                             activeCards.get(0).setImageResource(R.drawable.placeholder);
+                            activeCards.get(0).setTag(R.drawable.placeholder);
                             activeCards.remove(0);
 
                         }
                     }
+                    //Player choose correct two cards
                     else if((int)activeCards.get(0).getTag() != R.drawable.checkmark && (int)activeCards.get(1).getTag() != R.drawable.checkmark){
-
                         pointCounter+=1;
-                        points.setText("Points: "+pointCounter);
+                        if(pointCounter>=10){
+                            points.setText("You Win!");
+                            won = true;
+                        }
+                        else {
+                            points.setText("Points: " + pointCounter);
+                        }
                         for(int i = 0; i < activeCards.size();i++){
-                            //activeCards.get(i).setImageResource(R.drawable.checkmark);
+                            activeCards.get(i).setImageResource(R.drawable.checkmark);
+                            gridView.getAdapter().getView(indexes[i],null,gridView).setTag(R.drawable.checkmark);
+                            checkMarkIndexes.add(indexes[i]);
                             activeCards.get(i).setTag(R.drawable.checkmark);
+                            ObjectAnimator flip = ObjectAnimator.ofFloat(activeCards.get(i),"rotationY",180f,0);
+                            flip.setDuration(1);
+                            flip.start();
                         }
                         activeCards.clear();
 
-                        //Winning Case
-                        if(pointCounter >= 10){
-                            won = true;
-                            timer.cancel();
-                            timerDisplay.setText("You Win!!!");
-                        }
 
                     }
                     gridView.setEnabled(true);
@@ -215,7 +212,54 @@ public class GameActivity extends AppCompatActivity{
     /**
      * Shuffles card game so that unsolved cards are below all of the solved cards
      */
-    public void smartShuffle(){
-        //TODO: Lets put two tags in card: R.drawable.photo and state(Turned over or not)
+
+    @OnClick(R.id.shuffle_button)
+    public void shuffleGame(){
+        int size = checkMarkIndexes.size();
+        if(pointCounter > 0 && pointCounter < 10){
+            Integer[] newArray = new Integer[20];
+            int index = 0;
+            //First Passthrough looking for completed images
+//            for(int i = 0; i<20; i++){
+//                if((Integer)gridView.getAdapter().getView(i,null,gridView).getTag() == R.drawable.checkmark){
+//                    newArray[index] = gameArray[i];
+//                    index++;
+//                }
+//            }
+            ArrayList<Integer> gameArrayList = new ArrayList<>(Arrays.asList(gameArray));
+
+            for(Integer checkMarkIndex: checkMarkIndexes){
+                newArray[index] = gameArray[checkMarkIndex];
+                gameArrayList.set(checkMarkIndex.intValue(),-1);
+                index++;
+            }
+            //Second passthrough looking for unknown images
+            for(Integer j : gameArrayList){
+//                if((Integer)gridView.getAdapter().getView(i,null,gridView).getTag() == R.drawable.placeholder){
+//                    newArray[index] = gameArray[i];
+//                    index++;
+//                }
+                if(j.intValue() != -1) {
+                    newArray[index] = j;
+                    index++;
+                }
+
+            }
+            gameArray = newArray;
+            ((ImageAdapter)gridView.getAdapter()).updateAdapter(newArray,size);
+            for(int i = 0; i<(pointCounter*2);i++){
+                checkMarkIndexes.set(i,i);
+            }
+
+
+        }
+        else {
+            if(pointCounter>=10){
+                Toast.makeText(this, "You Win!!", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(this, "Score 1 point to shuffle", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

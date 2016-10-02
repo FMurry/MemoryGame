@@ -8,20 +8,23 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="xyz.fmsoft.memorygame.GameActivity">
-    <TextView
-        android:id="@+id/game_counter"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/shuffle_button"
+        android:layout_width="128dp"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textColor="@color/colorPrimary"
+        android:layout_marginBottom="8dp"
+        android:text="@string/shuffle"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="16dp"/>
+        android:theme="@style/MyMaterialButton"
+        android:textColor="@color/colorText"
+        android:textSize="18sp"/>
+
     <GridView
         android:id="@+id/game_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/game_counter"
+        android:layout_below="@id/shuffle_button"
         android:columnWidth="120dp"
         android:numColumns="4"
         android:verticalSpacing="24dp"
