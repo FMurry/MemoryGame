@@ -4,14 +4,10 @@ import android.animation.ObjectAnimator;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.media.Image;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -36,7 +32,6 @@ public class GameActivity extends AppCompatActivity{
     @BindView(R.id.info_button)TextView info;
     @BindView(R.id.shuffle_button)Button shuffleButton;
     private int pointCounter;
-    private CountDownTimer timer;
     public long totalTime = 181000;
     private boolean won;
     ArrayList<ImageView> activeCards;
@@ -96,8 +91,6 @@ public class GameActivity extends AppCompatActivity{
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         DialogFragment helpDialog = HelpDialog.newInstance();
         helpDialog.show(fragmentTransaction, "Help");
-        timer.cancel();
-
     }
 
 
@@ -182,7 +175,7 @@ public class GameActivity extends AppCompatActivity{
                             points.setText("Points: " + pointCounter);
                         }
                         for(int i = 0; i < activeCards.size();i++){
-                            activeCards.get(i).setImageResource(R.drawable.checkmark);
+                            //activeCards.get(i).setImageResource(R.drawable.checkmark);
                             gridView.getAdapter().getView(indexes[i],null,gridView).setTag(R.drawable.checkmark);
                             checkMarkIndexes.add(indexes[i]);
                             activeCards.get(i).setTag(R.drawable.checkmark);
@@ -219,13 +212,7 @@ public class GameActivity extends AppCompatActivity{
         if(pointCounter > 0 && pointCounter < 10){
             Integer[] newArray = new Integer[20];
             int index = 0;
-            //First Passthrough looking for completed images
-//            for(int i = 0; i<20; i++){
-//                if((Integer)gridView.getAdapter().getView(i,null,gridView).getTag() == R.drawable.checkmark){
-//                    newArray[index] = gameArray[i];
-//                    index++;
-//                }
-//            }
+
             ArrayList<Integer> gameArrayList = new ArrayList<>(Arrays.asList(gameArray));
 
             for(Integer checkMarkIndex: checkMarkIndexes){
@@ -235,10 +222,7 @@ public class GameActivity extends AppCompatActivity{
             }
             //Second passthrough looking for unknown images
             for(Integer j : gameArrayList){
-//                if((Integer)gridView.getAdapter().getView(i,null,gridView).getTag() == R.drawable.placeholder){
-//                    newArray[index] = gameArray[i];
-//                    index++;
-//                }
+//
                 if(j.intValue() != -1) {
                     newArray[index] = j;
                     index++;

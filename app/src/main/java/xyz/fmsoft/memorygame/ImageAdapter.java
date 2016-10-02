@@ -121,7 +121,8 @@ public class ImageAdapter extends BaseAdapter {
         }
         if(check){
             if(position < sizeOfSolved){
-                card.setImageResource(R.drawable.checkmark);
+                //card.setImageResource(R.drawable.checkmark);
+                card.setImageResource(androidPhotos[position]);
                 card.setTag(R.drawable.checkmark);
             }
             else{
