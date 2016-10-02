@@ -1,5 +1,6 @@
 package xyz.fmsoft.memorygame;
 
+import android.animation.ObjectAnimator;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -131,19 +132,36 @@ public class GameActivity extends AppCompatActivity{
      * @param card the card that is being checked
      * @param position the position of the card
      */
-    public void checkGame(View card, int position) {
+    public void checkGame(final View card, final int position) {
 
         if((int)(((ImageView)card).getTag()) != R.drawable.checkmark && activeCards.size() < 1) {
             activeCards.add((ImageView) card);
-            ((ImageView) card).setImageResource(gameArray[position]);
-            ((ImageView) card).setTag(gameArray[position]);
+            ObjectAnimator flip = ObjectAnimator.ofFloat(card,"rotationY",0f,180f);
+            flip.setDuration(250);
+            flip.start();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ((ImageView) card).setImageResource(gameArray[position]);
+                    ((ImageView) card).setTag(gameArray[position]);
+                }
+            },250);
+
+
         }
         //So user doesn't press same image twice
         else if((int)(((ImageView)card).getTag()) != R.drawable.checkmark && !((ImageView)card).equals(activeCards.get(0))){
             activeCards.add((ImageView) card);
-            //TODO: ADD animation here
-            ((ImageView) card).setImageResource(gameArray[position]);
-            ((ImageView) card).setTag(gameArray[position]);
+            ObjectAnimator flip = ObjectAnimator.ofFloat(card,"rotationY",0f,180f);
+            flip.setDuration(250);
+            flip.start();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ((ImageView) card).setImageResource(gameArray[position]);
+                    ((ImageView) card).setTag(gameArray[position]);
+                }
+            },250);
         }
         if(activeCards.size() >= 2) {
             gridView.setEnabled(false);
@@ -153,8 +171,12 @@ public class GameActivity extends AppCompatActivity{
                     int size = activeCards.size();
                     if(!(activeCards.get(0).getTag().equals(activeCards.get(1).getTag()))) {
                         for (int i = 0; i < size; i++) {
+                            ObjectAnimator flip = ObjectAnimator.ofFloat(activeCards.get(0),"rotationY",0f,180f);
+                            flip.setDuration(250);
+                            flip.start();
                             activeCards.get(0).setImageResource(R.drawable.placeholder);
                             activeCards.remove(0);
+
                         }
                     }
                     else if((int)activeCards.get(0).getTag() != R.drawable.checkmark && (int)activeCards.get(1).getTag() != R.drawable.checkmark){
